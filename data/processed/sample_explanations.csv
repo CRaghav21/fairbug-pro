@@ -1,0 +1,16 @@
+report_id,text_preview,prediction,confidence,explanation,top_words
+1,feature request update bug fix error doc feature please add functionality,Not Performance Bug,0.9989825657237085,"This report is NOT classified as a performance bug with 99.9% confidence.
+Key terms detected: feature, functionality, add functionality, add, feature request.
+These terms are not strongly associated with performance issues in our training data.","feature, functionality, add functionality, add, feature request"
+2,feature request api install update update fix please add functionality,Not Performance Bug,0.9987957877991652,"This report is NOT classified as a performance bug with 99.9% confidence.
+Key terms detected: feature, functionality, add functionality, add, feature request.
+These terms are not strongly associated with performance issues in our training data.","feature, functionality, add functionality, add, feature request"
+3,performance issue gpu speed gpu performance timeout timeout speed system becomes slow running,Performance Bug,0.9999978414263696,"This report is classified as a performance bug with 100.0% confidence.
+Key performance-related terms detected: issue, performance, slow running, slow, performance issue.
+These terms are strongly associated with performance issues in our training data.","issue, performance, slow running, slow, performance issue"
+4,feature request install install feature update doc install api error error please add functionality,Not Performance Bug,0.9987063976636437,"This report is NOT classified as a performance bug with 99.9% confidence.
+Key terms detected: feature, functionality, add functionality, add, feature request.
+These terms are not strongly associated with performance issues in our training data.","feature, functionality, add functionality, add, feature request"
+5,feature request feature feature fix fix doc bug error please add functionality,Not Performance Bug,0.9986450887465463,"This report is NOT classified as a performance bug with 99.9% confidence.
+Key terms detected: feature, functionality, add functionality, add, feature request.
+These terms are not strongly associated with performance issues in our training data.","feature, functionality, add functionality, add, feature request"

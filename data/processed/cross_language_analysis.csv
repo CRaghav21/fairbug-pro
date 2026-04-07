@@ -1,0 +1,4 @@
+source_language,target_language,matched_patterns_in_source,translated_patterns,detectable_in_target,cross_language_score,recommendation
+python,c_cpp,"['slow', 'gpu']","['performance_degradation', 'gpu_kernel']",[],0.0,❌ LOW transferability - Performance issues are language-specific
+python,java,"['slow', 'gpu']","['performance_degradation', 'gpu_kernel']",[],0.0,❌ LOW transferability - Performance issues are language-specific
+python,javascript,"['slow', 'gpu']","['performance_degradation', 'gpu_kernel']",[],0.0,❌ LOW transferability - Performance issues are language-specific
