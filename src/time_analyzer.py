@@ -29,7 +29,7 @@ class TimeAwareAnalyzer:
         Returns:
             Dictionary with trend analysis
         """
-        # Convert dates to datetime
+        # Converting dates to datetime
         parsed_dates = []
         for d in dates:
             try:
@@ -40,29 +40,29 @@ class TimeAwareAnalyzer:
             except:
                 parsed_dates.append(pd.Timestamp.now())
         
-        # Create DataFrame for analysis
+        # Creating DataFrame for analysis
         df = pd.DataFrame({
             'date': parsed_dates,
             'report': reports,
             'is_performance': labels
         })
         
-        # Extract time features
+        # Extracting time features
         df['year'] = df['date'].dt.year
         df['month'] = df['date'].dt.month
         df['quarter'] = df['date'].dt.quarter
         df['day_of_week'] = df['date'].dt.dayofweek
         df['month_name'] = df['date'].dt.month_name()
         
-        # Group by month
+        # Groupping by month
         monthly_grouped = df.groupby(['year', 'month']).agg({
             'is_performance': ['count', 'sum', 'mean']
         }).reset_index()
         
-        # Rename columns for easier access
+        # Renaming columns for easier access
         monthly_grouped.columns = ['year', 'month', 'total_bugs', 'perf_bugs', 'perf_rate']
         
-        # Find peak months
+        # Finding peak months
         if len(monthly_grouped) > 0:
             # Find month with highest number of performance bugs
             peak_month_idx = monthly_grouped['perf_bugs'].idxmax()
@@ -72,7 +72,7 @@ class TimeAwareAnalyzer:
         else:
             peak_month = "No data"
         
-        # Detect trend
+        # Detecting trend
         perf_rates = monthly_grouped['perf_rate'].values
         if len(perf_rates) >= 3:
             # Compare first 3 months vs last 3 months
@@ -91,13 +91,13 @@ class TimeAwareAnalyzer:
         # Seasonal patterns (by month name)
         seasonal = df.groupby('month_name')['is_performance'].mean().to_dict()
         
-        # Find busiest month for performance bugs
+        # Finding busiest month for performance bugs
         if seasonal:
             busiest_month = max(seasonal, key=seasonal.get)
         else:
             busiest_month = None
         
-        # Calculate performance rate by quarter
+        # Calculating performance rate by quarter
         quarterly = df.groupby('quarter')['is_performance'].mean().to_dict()
         
         return {

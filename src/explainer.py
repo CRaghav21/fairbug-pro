@@ -24,7 +24,7 @@ class BugReportExplainer:
         self.classifier = classifier
         self.vectorizer = classifier.vectorizer
         
-        # Feature names from vectorizer
+        # Featuring names from vectorizer
         self.feature_names = None
         if hasattr(self.vectorizer, 'get_feature_names_out'):
             self.feature_names = self.vectorizer.get_feature_names_out()
@@ -39,24 +39,24 @@ class BugReportExplainer:
         Returns:
             dict: Explanation of prediction
         """
-        # Get prediction
+        # Getting prediction
         pred = self.classifier.predict_single(report_text)
         proba = self.classifier.predict_proba_ensemble([report_text])[0]
         
-        # Convert to scalar if needed
+        # Convertting to scalar if needed
         if isinstance(pred, np.ndarray):
             pred = pred[0] if len(pred) > 0 else 0
         
-        # Get confidence as scalar
+        # Getting confidence as scalar
         confidence = float(proba[pred]) if pred < len(proba) else 0.5
         
-        # Get feature importance for this prediction
+        # Getting feature importance for this prediction
         X = self.vectorizer.transform([report_text])
         
-        # Get non-zero features in this report
+        # Getting non-zero features in this report
         non_zero_indices = X.nonzero()[1]
         
-        # Extract important words
+        # Extracting important words
         word_importance = []
         
         if hasattr(self.classifier.classifiers['random_forest'], 'feature_importances_'):
@@ -68,10 +68,10 @@ class BugReportExplainer:
                     importance = float(importances[idx])
                     word_importance.append((word, importance))
         
-        # Sort by importance
+        # Sorting by importance
         word_importance.sort(key=lambda x: abs(x[1]), reverse=True)
         
-        # Generate human-readable explanation
+        # Generating human-readable explanation
         explanation = self._generate_explanation(word_importance[:10], pred, confidence)
         
         return {
@@ -100,7 +100,7 @@ class BugReportExplainer:
         
         words = [word for word, _ in top_words[:5]]
         
-        # Make sure confidence is a float
+        # Making sure confidence is a float
         conf_float = float(confidence)
         
         if prediction == 1:
@@ -167,12 +167,12 @@ class BugReportExplainer:
         
         importances = self.classifier.classifiers['random_forest'].feature_importances_
         
-        # Get top N features
+        # Geting top N features
         top_indices = np.argsort(importances)[-top_n:]
         top_features = [self.feature_names[i] for i in top_indices]
         top_importances = importances[top_indices]
         
-        # Create plot
+        # Creating plot
         plt.figure(figsize=(12, 8))
         plt.barh(range(len(top_features)), top_importances, color='steelblue')
         plt.yticks(range(len(top_features)), top_features)
@@ -184,7 +184,7 @@ class BugReportExplainer:
         print("✓ Feature importance plot saved to data/processed/feature_importance.png")
         plt.show()
         
-        # Return as DataFrame
+        # Returning as DataFrame
         importance_df = pd.DataFrame({
             'feature': top_features,
             'importance': top_importances

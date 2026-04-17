@@ -17,19 +17,19 @@ def preprocess_text(text):
     if pd.isna(text) or text is None:
         return ""
     
-    # Convert to string and lowercase
+    # Converting to string and lowercase
     text = str(text).lower()
     
-    # Remove special characters and digits (keep only letters and spaces)
+    # Removing special characters and digits (keep only letters and spaces)
     text = re.sub(r'[^a-zA-Z\s]', '', text)
     
-    # Tokenize
+    # Tokenizing
     try:
         tokens = word_tokenize(text)
     except:
         tokens = text.split()
     
-    # Remove stopwords and short words
+    # Removing stopwords and short words
     stop_words = set(stopwords.words('english'))
     tokens = [word for word in tokens if word not in stop_words and len(word) > 2]
     
@@ -43,7 +43,7 @@ def load_dataset(project_name, data_path='data/raw'):
     
     print(f"Attempting to load: {filepath}")
     
-    # Try to load real data
+    # Trying to load real data
     if os.path.exists(filepath):
         try:
             print(f"Loading REAL data from {filepath}...")
@@ -52,19 +52,19 @@ def load_dataset(project_name, data_path='data/raw'):
             print(f"Columns found: {list(df.columns)}")
             print(f"Total rows: {len(df)}")
             
-            # Check what columns are available
+            # Checking what columns are available
             # The real data might have different column names
             possible_text_columns = ['description', 'text', 'body', 'content']
             possible_label_columns = ['label', 'is_performance', 'type']
             
-            # Find text column
+            # Finding text column
             text_col = None
             for col in possible_text_columns:
                 if col in df.columns:
                     text_col = col
                     break
             
-            # Find label column
+            # Finding label column
             label_col = None
             for col in possible_label_columns:
                 if col in df.columns:
@@ -97,7 +97,7 @@ def load_dataset(project_name, data_path='data/raw'):
             traceback.print_exc()
             print("Falling back to synthetic data...")
     
-    # Fall back to synthetic data
+    # Falling back to synthetic data
     return create_synthetic_data(project_name)
 
 def create_synthetic_data(project_name):
@@ -134,14 +134,14 @@ def create_synthetic_data(project_name):
     texts = []
     labels = []
     
-    # Create performance bugs
+    # Creating performance bugs
     for i in range(n_perf):
         words = np.random.choice(perf_keywords, np.random.randint(3, 8))
         text = ' '.join(words)
         labels.append(1)
         texts.append(text)
     
-    # Create non-performance bugs
+    # Creating non-performance bugs
     for i in range(n_non_perf):
         words = np.random.choice(other_keywords, np.random.randint(3, 8))
         text = ' '.join(words)
@@ -195,7 +195,7 @@ def plot_comparison(baseline_scores, your_scores, metric='F1 Score'):
     plt.title(f'Comparison of {metric} across Experiments')
     plt.grid(True, alpha=0.3)
     
-    # Add individual points
+    # Adding individual points
     plt.scatter(np.random.normal(1, 0.04, len(baseline_scores)), baseline_scores, 
                alpha=0.5, color='blue', label='Baseline')
     plt.scatter(np.random.normal(2, 0.04, len(your_scores)), your_scores, 
@@ -204,7 +204,7 @@ def plot_comparison(baseline_scores, your_scores, metric='F1 Score'):
     plt.legend()
     plt.tight_layout()
     
-    # Save plot
+    # Saving plot
     os.makedirs('data/processed', exist_ok=True)
     plt.savefig(f'data/processed/comparison_{metric.lower().replace(" ", "_")}.png', dpi=300)
     plt.show()

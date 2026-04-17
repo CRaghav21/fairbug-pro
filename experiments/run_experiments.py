@@ -44,7 +44,7 @@ class ExperimentRunner:
         self.baseline_scores = []
         self.fairbug_scores = []
         
-        # Create processed data directory if it doesn't exist
+        # Created processed data directory if it doesn't existists
         os.makedirs('data/processed', exist_ok=True)
     
     def run_classification_experiments(self, n_repeats=30, test_size=0.3):
@@ -60,7 +60,7 @@ class ExperimentRunner:
             print(f"Processing project: {project}")
             print(f"{'='*40}")
             
-            # Load data for this project
+            # Loading data for this project
             texts, labels = load_dataset(project)
             
             if len(texts) == 0:
@@ -70,12 +70,12 @@ class ExperimentRunner:
             print(f"Total samples: {len(texts)}")
             print(f"Performance bugs: {np.sum(labels)} ({np.mean(labels)*100:.1f}%)")
             
-            # Run repeated experiments
+            # Running repeated experiments
             for repeat in range(n_repeats):
                 if repeat % 10 == 0:
                     print(f"  Repeat {repeat+1}/{n_repeats}")
                 
-                # Split data
+                # Spliting data
                 X_train, X_test, y_train, y_test = train_test_split(
                     texts, labels, test_size=test_size, 
                     random_state=repeat, stratify=labels
@@ -86,16 +86,16 @@ class ExperimentRunner:
                 baseline.train(X_train, y_train)
                 y_pred_baseline = baseline.predict(X_test)
                 
-                # Your solution: FairBug
+                # My solution: FairBug
                 fairbug = EnhancedBugClassifier()
                 fairbug.train_ensemble(X_train, y_train)
                 y_pred_fairbug = fairbug.predict_ensemble(X_test)
                 
-                # Calculate metrics
+                # Calculating metrics
                 metrics_baseline = evaluate_predictions(y_test, y_pred_baseline)
                 metrics_fairbug = evaluate_predictions(y_test, y_pred_fairbug)
                 
-                # Store results
+                # Storing results
                 for metric, value in metrics_baseline.items():
                     self.results[metric].append(value)
                 self.results['project'].append(project)
@@ -108,14 +108,14 @@ class ExperimentRunner:
                 self.results['experiment_id'].append(repeat)
                 self.results['model'].append('fairbug')
                 
-                # Store F1 scores for statistical test
+                # Storing F1 scores for statistical test
                 self.baseline_scores.append(metrics_baseline['f1_score'])
                 self.fairbug_scores.append(metrics_fairbug['f1_score'])
         
-        # Convert results to DataFrame
+        # Converting results to DataFrame
         results_df = pd.DataFrame(self.results)
         
-        # Save results to data/processed
+        # Saving results to data/processed paths
         output_path = 'data/processed/classification_results.csv'
         results_df.to_csv(output_path, index=False)
         print(f"\n✓ Classification results saved to: {output_path}")
@@ -128,11 +128,11 @@ class ExperimentRunner:
         print("Statistical Significance Tests")
         print("=" * 60)
         
-        # Convert to arrays
+        # Converting into arrays
         baseline_scores = np.array(self.baseline_scores)
         fairbug_scores = np.array(self.fairbug_scores)
         
-        # Calculate mean improvements
+        # Calculating mean improvements
         mean_improvement = np.mean(fairbug_scores - baseline_scores)
         median_improvement = np.median(fairbug_scores - baseline_scores)
         
@@ -157,10 +157,10 @@ class ExperimentRunner:
         else:
             print("\n✗ No significant difference detected (p ≥ 0.05)")
         
-        # Create comparison plot and save to data/processed
+        # Createing comparison plots and saving into data/processed paths
         self.plot_comparison(baseline_scores, fairbug_scores, 'F1 Score')
         
-        # Save statistical results
+        # Saving statistical results
         stats_results = {
             't_statistic': t_stat,
             't_p_value': p_value_t,
@@ -181,11 +181,11 @@ class ExperimentRunner:
         
         plt.figure(figsize=(10, 6))
         
-        # Create box plot
+        # Creating box plot
         data_to_plot = [baseline_scores, your_scores]
         bp = plt.boxplot(data_to_plot, patch_artist=True)
         
-        # Customize colors
+        # Customizing colors
         bp['boxes'][0].set_facecolor('lightblue')
         bp['boxes'][1].set_facecolor('lightgreen')
         
@@ -194,7 +194,7 @@ class ExperimentRunner:
         plt.title(f'Comparison of {metric} across 30 Experiments')
         plt.grid(True, alpha=0.3)
         
-        # Add individual points
+        # Adding individual points
         plt.scatter(np.random.normal(1, 0.04, len(baseline_scores)), baseline_scores, 
                    alpha=0.5, color='blue', label='Baseline')
         plt.scatter(np.random.normal(2, 0.04, len(your_scores)), your_scores, 
@@ -203,7 +203,7 @@ class ExperimentRunner:
         plt.legend()
         plt.tight_layout()
         
-        # Save plot
+        # Saving plots
         plt.savefig('data/processed/comparison_f1_score.png', dpi=300)
         print(f"✓ Comparison plot saved to: data/processed/comparison_f1_score.png")
         plt.show()
@@ -214,7 +214,7 @@ class ExperimentRunner:
         print("Running Fairness Experiments")
         print("=" * 60)
         
-        # Load data for all projects
+        # Loading data for all projects
         projects = ['tensorflow', 'pytorch', 'keras', 'mxnet', 'caffe']
         projects_data = {}
         
@@ -224,7 +224,7 @@ class ExperimentRunner:
                 projects_data[project] = (texts, labels)
                 print(f"Loaded {project}: {len(texts)} samples")
         
-        # Train FairBug on combined data
+        # Training FairBug on combined data
         print("\nTraining FairBug on combined dataset...")
         combined_texts = []
         combined_labels = []
@@ -236,24 +236,24 @@ class ExperimentRunner:
         fairbug = EnhancedBugClassifier()
         fairbug.train_ensemble(combined_texts, combined_labels)
         
-        # Test fairness
+        # Testing fairness
         fairness_tester = FairnessTester(fairbug)
         fairness_results = fairness_tester.calculate_fairness_metrics_across_projects(projects_data)
         
         print("\nFairness Test Results:")
         print(fairness_results[['project_a', 'project_b', 'fairness_gap', 'p_value', 'is_fair']])
         
-        # Save fairness results to data/processed
+        # Saving fairness results to data/processed
         fairness_results.to_csv('data/processed/fairness_results.csv', index=False)
         print(f"\n✓ Fairness results saved to: data/processed/fairness_results.csv")
         
-        # Generate discriminatory pairs for a sample project
+        # Generating discriminatory pairs for a sample project
         print("\nGenerating discriminatory pairs for TensorFlow...")
         if 'tensorflow' in projects_data:
             texts, labels = projects_data['tensorflow']
             discriminatory_pairs = fairness_tester.generate_discriminatory_pairs(texts, labels, n_pairs=100)
             
-            # Save pairs
+            # Saving pairs
             pairs_df = pd.DataFrame(discriminatory_pairs)
             pairs_df.to_csv('data/processed/discriminatory_pairs.csv', index=False)
             print(f"✓ Found {len(discriminatory_pairs)} discriminatory pairs")
@@ -267,17 +267,17 @@ class ExperimentRunner:
         print("Explainability Demo")
         print("=" * 60)
         
-        # Load sample data
+        # Loading sample data
         texts, labels = load_dataset('tensorflow')
         
-        # Train classifier
+        # Training classifier
         fairbug = EnhancedBugClassifier()
         fairbug.train_ensemble(texts[:300], labels[:300])  # Use subset for speed
         
-        # Initialize explainer
+        # Initializing explainer
         explainer = BugReportExplainer(fairbug)
         
-        # Get some sample reports
+        # Getting some sample reports
         sample_reports = texts[:5]
         
         print("\nAnalyzing sample bug reports:")
@@ -304,12 +304,12 @@ class ExperimentRunner:
                 'top_words': ', '.join([w for w, _ in explanation['top_words'][:5]])
             })
         
-        # Save explanations to data/processed
+        # Saving explanations to data/processed
         explanations_df = pd.DataFrame(explanations_list)
         explanations_df.to_csv('data/processed/sample_explanations.csv', index=False)
         print(f"\n✓ Sample explanations saved to: data/processed/sample_explanations.csv")
         
-        # Visualize feature importance and save
+        # Visualizing feature importance and save
         print("\nVisualizing global feature importance...")
         importance_df = explainer.visualize_feature_importance(top_n=20)
         if importance_df is not None:
@@ -322,11 +322,11 @@ class ExperimentRunner:
       print("NOVEL ANALYSIS: Time, Severity & Cross-Language")
       print("=" * 60)
     
-      # Load data for analysis
+      # Loading data for analysis
       project = 'tensorflow'  # Use largest dataset
       texts, labels = load_dataset(project)
     
-      # Get dates from original data
+      # Getting dates from original data
       import pandas as pd
       filepath = f'data/raw/{project}_reports.csv'
       df = pd.read_csv(filepath)
@@ -343,10 +343,10 @@ class ExperimentRunner:
       print(f"   Trend: {trend_results['trend']}")
       print(f"   Busiest month for performance bugs: Month {trend_results['busiest_month']}")
     
-      # Save time analysis results
+      # Saving time analysis results
       import json
       with open('data/processed/time_analysis.json', 'w') as f:
-          # Convert non-serializable objects
+          # Converting non-serializable objects
           serializable_results = {
               'peak_performance_month': trend_results['peak_performance_month'],
               'trend': trend_results['trend'],
@@ -358,7 +358,7 @@ class ExperimentRunner:
           json.dump(serializable_results, f, indent=2)
       print("   ✓ Time analysis saved to data/processed/time_analysis.json")
     
-      # Create plot
+      # Creating plot
       time_analyzer.plot_temporal_analysis(trend_results, project)
     
       # 2. SEVERITY PREDICTION
@@ -366,7 +366,7 @@ class ExperimentRunner:
       print("-" * 40)
       severity_predictor = SeverityPredictor()
     
-      # Analyze first 10 reports
+      # Analysing first 10 reports
       sample_reports = texts[:10]
       sample_dates = dates[:10]
     
@@ -381,7 +381,7 @@ class ExperimentRunner:
           print(f"   Fix Time: {severity['estimated_fix_time']}")
           print(f"   Action: {severity['recommended_action']}")
     
-      # Save severity results
+      # Saving severity results
       severity_df = pd.DataFrame(severity_results)
       severity_df.to_csv('data/processed/severity_analysis.csv', index=False)
       print("\n   ✓ Severity analysis saved to data/processed/severity_analysis.csv")
@@ -391,10 +391,10 @@ class ExperimentRunner:
       print("-" * 40)
       cross_lang = CrossLanguageDetector()
     
-      # Test with different language pairs
+      # Testing with different language pairs
       languages = ['python', 'c_cpp', 'java', 'javascript']
     
-      # Find a performance bug report
+      # Finding a performance bug report
       perf_indices = [i for i, label in enumerate(labels) if label == 1]
       if perf_indices:
           sample_perf_bug = texts[perf_indices[0]]
@@ -416,7 +416,7 @@ class ExperimentRunner:
               print(f"   Cross-language score: {result['cross_language_score']:.2f}")
               print(f"   {result['recommendation']}")
         
-          # Save cross-language results
+          # Saving cross-language results
           cross_df = pd.DataFrame(cross_lang_results)
           cross_df.to_csv('data/processed/cross_language_analysis.csv', index=False)
           print("\n   ✓ Cross-language analysis saved to data/processed/cross_language_analysis.csv")
@@ -431,16 +431,16 @@ def main():
     print("=" * 60)
     print("\nStarting experiments...\n")
     
-    # Create results directory
+    # Creating results directory
     os.makedirs('data/processed', exist_ok=True)
     
-    # Initialize experiment runner
+    # Initializing experiment runner
     runner = ExperimentRunner()
     
-    # Run classification experiments
+    # Running classification experiments
     classification_results = runner.run_classification_experiments(n_repeats=30)
     
-    # Print summary
+    # Printing summary
     print("\n" + "=" * 60)
     print("CLASSIFICATION RESULTS SUMMARY")
     print("=" * 60)
@@ -454,17 +454,17 @@ def main():
     
     print(summary)
     
-    # Run statistical tests
+    # Running statistical tests
     stat_results = runner.run_statistical_tests()
     
-    # Run fairness experiments
+    # Running fairness experiments
     fairness_results = runner.run_fairness_experiments()
     
-    # Run explainability demo
+    # Running explainability demo
     explainer = runner.run_explainability_demo()
     
     # ★★★ NEW: Run novel analysis ★★★
-    runner.run_novel_analysis()
+    runner.l_analysis()
     
     print("\n" + "=" * 60)
     print("ALL EXPERIMENTS COMPLETED SUCCESSFULLY!")

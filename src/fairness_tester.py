@@ -38,15 +38,15 @@ class FairnessTester:
         print(f"  {project_a_name}: {len(texts_a)} samples, {sum(labels_a)} performance bugs")
         print(f"  {project_b_name}: {len(texts_b)} samples, {sum(labels_b)} performance bugs")
         
-        # Get predictions
+        # Getting predictions
         preds_a = self.classifier.predict_ensemble(texts_a)
         preds_b = self.classifier.predict_ensemble(texts_b)
         
-        # Calculate error rates
+        # Calculating error rates
         error_a = np.mean(preds_a != labels_a)
         error_b = np.mean(preds_b != labels_b)
         
-        # Calculate F1 scores
+        # Calculating F1 scores
         from sklearn.metrics import f1_score
         f1_a = f1_score(labels_a, preds_a, zero_division=0)
         f1_b = f1_score(labels_b, preds_b, zero_division=0)
@@ -105,11 +105,11 @@ class FairnessTester:
         """
         print(f"\nGenerating {n_pairs} discriminatory pairs...")
         
-        # Get predictions first (this is the slow part)
+        # Getting predictions first (this is the slow part)
         print("Making predictions on all samples...")
         preds = self.classifier.predict_ensemble(texts)
         
-        # Find indices where predictions differ from labels
+        # Finding indices where predictions differ from labels
         misclassified = np.where(preds != labels)[0]
         
         if len(misclassified) < 2:
@@ -118,12 +118,12 @@ class FairnessTester:
         
         print(f"Found {len(misclassified)} misclassified samples")
         
-        # Limit to first 500 for speed
+        # Limiting to first 500 for speed
         if len(misclassified) > 500:
             misclassified = misclassified[:500]
             print(f"Using first 500 misclassified samples for efficiency")
         
-        # Calculate text similarities only for misclassified samples
+        # Calculating text similarities only for misclassified samples
         from sklearn.feature_extraction.text import TfidfVectorizer
         from sklearn.metrics.pairwise import cosine_similarity
         
@@ -133,27 +133,27 @@ class FairnessTester:
         vectorizer = TfidfVectorizer(max_features=500, stop_words='english')
         tfidf_matrix = vectorizer.fit_transform(misclassified_texts)
         
-        # Find discriminatory pairs
+        # Finding discriminatory pairs
         discriminatory_pairs = []
         n_samples = len(misclassified)
         
         print(f"Searching for pairs among {n_samples} samples...")
         
-        # Use progress bar
+        # Using progress bar
         from tqdm import tqdm
         pbar = tqdm(total=min(n_pairs, n_samples * n_samples), desc="Finding pairs")
         
         attempts = 0
-        max_attempts = n_pairs * 10  # Limit attempts to avoid infinite loop
+        max_attempts = n_pairs * 10  # Limiting attempts to avoid infinite loop
         
         while len(discriminatory_pairs) < n_pairs and attempts < max_attempts:
             # Randomly select two different misclassified samples
             idx1, idx2 = np.random.choice(n_samples, 2, replace=False)
             
-            # Calculate similarity
+            # Calculating similarity
             similarity = cosine_similarity(tfidf_matrix[idx1:idx1+1], tfidf_matrix[idx2:idx2+1])[0][0]
             
-            # Check if they're similar enough
+            # Checking if they're similar enough
             if similarity > 0.3:
                 original_idx1 = misclassified[idx1]
                 original_idx2 = misclassified[idx2]
@@ -175,13 +175,13 @@ class FairnessTester:
         
         print(f"\n✓ Found {len(discriminatory_pairs)} discriminatory pairs")
         
-        # Save sample pairs to CSV
+        # Saving sample pairs to CSV
         if len(discriminatory_pairs) > 0:
             pairs_df = pd.DataFrame(discriminatory_pairs)
             pairs_df.to_csv('data/processed/discriminatory_pairs.csv', index=False)
             print(f"✓ Saved to data/processed/discriminatory_pairs.csv")
             
-            # Show first few pairs
+            # Showing first few pairs
             print("\nSample discriminatory pairs:")
             for i, pair in enumerate(discriminatory_pairs[:3]):
                 print(f"\nPair {i+1}:")

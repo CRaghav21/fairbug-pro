@@ -1,17 +1,17 @@
 """
 Main entry point for FairBug application
-Author: Your Name
-Date: 2024
+Author: Raghavendra J Chigarahalli
+Date: 5th Apr 2026
 """
 
 import sys
 import os
 
-# Add src directory to path
+# Adding src directory to path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from experiments.run_experiments import main
 
 if __name__ == "__main__":
-    # Run all experiments
+    # Running all experiments
     main()

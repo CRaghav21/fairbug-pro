@@ -42,7 +42,7 @@ class SeverityPredictor:
         severity_score = 1  # Start with lowest severity
         report_lower = bug_report.lower()
         
-        # Check severity keywords
+        # Checking severity keywords
         for level, keywords in self.severity_keywords.items():
             for keyword in keywords:
                 if keyword in report_lower:
@@ -69,7 +69,7 @@ class SeverityPredictor:
         # Normalize to 1-5 scale
         severity_score = min(5, severity_score)
         
-        # Determine priority based on severity and urgency
+        # Determining priority based on severity and urgency
         urgency_score = 1
         for level, keywords in self.urgency_keywords.items():
             for keyword in keywords:
@@ -82,7 +82,7 @@ class SeverityPredictor:
                         urgency_score += 1
                     break
         
-        # Map to priority levels
+        # Mapping to priority levels
         priority_map = {
             5: 'CRITICAL - Fix immediately (today)',
             4: 'HIGH - Fix soon (this week)',
@@ -95,7 +95,7 @@ class SeverityPredictor:
         combined_score = int(severity_score * 0.7 + urgency_score * 0.3)
         combined_score = min(5, max(1, combined_score))
         
-        # Estimate fix time
+        # Estimating fix time
         fix_time_map = {
             5: '1-3 days (critical)',
             4: '3-5 days',

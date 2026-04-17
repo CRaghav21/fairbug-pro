@@ -7,8 +7,8 @@ from setuptools import setup, find_packages
 setup(
     name='fairbug',
     version='1.0.0',
-    author='Your Name',
-    author_email='your.email@university.ac.uk',
+    author='Raghavendra J Chigarahalli',
+    author_email='rxj588@student.bham.ac.uk',
     description='Fairness-Aware Bug Report Classifier',
     packages=find_packages(),
     install_requires=[

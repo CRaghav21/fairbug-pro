@@ -45,17 +45,17 @@ class CrossLanguageDetector:
         """
         report_lower = bug_report.lower()
         
-        # Get patterns for source and target
+        # Getting patterns for source and target
         source_patterns = self.language_patterns.get(source_lang, [])
         target_patterns = self.language_patterns.get(target_lang, [])
         
-        # Find which source patterns appear
+        # Finding which source patterns appear
         matched_source = []
         for pattern in source_patterns:
             if pattern in report_lower:
                 matched_source.append(pattern)
         
-        # Translate to target language equivalents
+        # Translating to target language equivalents
         translated_patterns = []
         for pattern in matched_source:
             # Simple translation logic
@@ -70,7 +70,7 @@ class CrossLanguageDetector:
             else:
                 translated_patterns.append(pattern)
         
-        # Check if these patterns would be detectable in target language
+        # Checking if these patterns would be detectable in target language
         target_detectable = []
         for trans_pattern in translated_patterns:
             for target_pattern in target_patterns:

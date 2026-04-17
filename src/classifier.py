@@ -31,7 +31,7 @@ class EnhancedBugClassifier:
         self.max_features = max_features
         self.ngram_range = ngram_range
         
-        # Initialize TF-IDF vectorizer with advanced parameters
+        # Initializing TF-IDF vectorizer with advanced parameters
         self.vectorizer = TfidfVectorizer(
             max_features=self.max_features,
             ngram_range=self.ngram_range,
@@ -42,7 +42,7 @@ class EnhancedBugClassifier:
             use_idf=True
         )
         
-        # Initialize individual classifiers
+        # Initializing individual classifiers
         self.classifiers = {
             'random_forest': RandomForestClassifier(
                 n_estimators=200,
@@ -79,11 +79,11 @@ class EnhancedBugClassifier:
         """
         print("Training ensemble classifier...")
         
-        # Transform texts to TF-IDF features
+        # Transforming texts to TF-IDF features
         X_train_tfidf = self.vectorizer.fit_transform(X_train)
         print(f"TF-IDF shape: {X_train_tfidf.shape}")
         
-        # Train each classifier
+        # Training each classifier
         for name, clf in self.classifiers.items():
             print(f"Training {name}...")
             clf.fit(X_train_tfidf, y_train)
@@ -111,7 +111,7 @@ class EnhancedBugClassifier:
             pred = clf.predict(X_tfidf)
             predictions.append(pred)
         
-        # Stack predictions and use majority voting
+        # Stacking predictions and use majority voting
         predictions = np.array(predictions)
         final_pred = np.apply_along_axis(
             lambda x: np.bincount(x).argmax(), 
@@ -147,7 +147,7 @@ class EnhancedBugClassifier:
                 proba = np.exp(proba) / np.exp(proba).sum(axis=1, keepdims=True)
             probabilities.append(proba)
         
-        # Average probabilities
+        # Averaging probabilities
         return np.mean(probabilities, axis=0)
     
     def predict_single(self, text):
@@ -171,7 +171,7 @@ class EnhancedBugClassifier:
         """
         import os
         
-        # Create directory if it doesn't exist
+        # Creating directory if it doesn't exist
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
         
         model_data = {

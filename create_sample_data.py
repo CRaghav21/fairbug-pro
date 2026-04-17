@@ -6,10 +6,10 @@ import pandas as pd
 import numpy as np
 import os
 
-# Create data directory
+# Creating data directory
 os.makedirs('data/raw', exist_ok=True)
 
-# Sample data for each project
+# Sample data for each project 
 projects_data = {
     'tensorflow': {
         'n_samples': 1490,
@@ -51,7 +51,7 @@ def create_sample_data(project_name, config):
     n_perf = int(config['n_samples'] * config['perf_ratio'])
     n_non_perf = config['n_samples'] - n_perf
     
-    # Create performance bug reports
+    # Creating performance bug reports
     for i in range(n_perf):
         words = np.random.choice(config['perf_keywords'], np.random.randint(3, 10))
         title = ' '.join(words)
@@ -66,7 +66,7 @@ def create_sample_data(project_name, config):
             'comments_count': np.random.randint(0, 15)
         })
     
-    # Create non-performance bug reports
+    # Creating non-performance bug reports
     for i in range(n_non_perf):
         words = np.random.choice(config['other_keywords'], np.random.randint(3, 10))
         title = ' '.join(words)
@@ -81,16 +81,16 @@ def create_sample_data(project_name, config):
             'comments_count': np.random.randint(0, 15)
         })
     
-    # Shuffle data
+    # Shuffling data
     df = pd.DataFrame(data)
     df = df.sample(frac=1, random_state=42).reset_index(drop=True)
     
-    # Save to CSV
+    # Saving to CSV
     filename = f'data/raw/{project_name}_reports.csv'
     df.to_csv(filename, index=False)
     print(f"Created {filename} with {len(df)} samples ({n_perf} performance bugs)")
 
-# Create all datasets
+# Creating all datasets
 for project, config in projects_data.items():
     create_sample_data(project, config)
 
