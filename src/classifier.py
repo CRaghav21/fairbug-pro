@@ -1,7 +1,7 @@
 """
 Enhanced Bug Report Classifier with Ensemble Methods
-Author: Your Name
-Date: 2024
+Author: Raghavendra J Chigarahalli
+Date: 5th Apr 2026
 """
 
 import numpy as np
