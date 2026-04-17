@@ -1,7 +1,8 @@
 """
 Time-Aware Bug Analysis - NOVEL FEATURE
 Analyzes when performance bugs appear and their trends
-Author: Your Name
+Author: Raghavendra J Chigarahalli
+Date: 5th Apr 2026
 """
 
 import pandas as pd
