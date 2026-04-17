@@ -1,7 +1,8 @@
 """
 Bug Severity Predictor - NOVEL FEATURE
 Predicts how severe and urgent a bug is
-Author: Your Name
+Author: Raghavendra J Chigarahalli
+Date: 5th Apr 2026
 """
 
 import numpy as np
