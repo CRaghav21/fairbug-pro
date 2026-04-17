@@ -1,7 +1,8 @@
 """
 Cross-Language Performance Bug Detection - NOVEL FEATURE
 Detects if performance bugs in one language can be found in another
-Author: Your Name
+Author: Raghavendra J Chigarahalli
+Date: 5th Apr 2026
 """
 
 import numpy as np
